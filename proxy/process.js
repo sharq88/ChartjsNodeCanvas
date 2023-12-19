@@ -1,6 +1,8 @@
 const { ChartJSNodeCanvas } = require ( '../dist/index' );
 const converter = require ( './converter' );
 
+global.DateTime = require ( 'luxon' );
+
 let instance;
 
 process.on ( 'message', async msg => {
