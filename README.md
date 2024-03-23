@@ -6,10 +6,12 @@
 # chartjs-node-canvas
 
 <!-- [![CircleCI](https://circleci.com/gh/SeanSobey/ChartjsNodeCanvas.svg?style=svg)](https://circleci.com/gh/SeanSobey/ChartjsNodeCanvas) -->
+
 [![GitHub](https://github.com/SeanSobey/ChartjsNodeCanvas/workflows/Node%20CI/badge.svg)](https://github.com/SeanSobey/ChartjsNodeCanvas/actions)
 [![codecov](https://codecov.io/gh/SeanSobey/ChartjsNodeCanvas/branch/master/graph/badge.svg)](https://codecov.io/gh/SeanSobey/ChartjsNodeCanvas)
 [![NPM](https://img.shields.io/npm/v/chartjs-node-canvas.svg)](https://www.npmjs.com/package/chartjs-node-canvas)
 [![packagephobia publish](https://badgen.net/packagephobia/publish/chartjs-node-canvas@latest)](https://bundlephobia.com/result?p=chartjs-node-canvas)
+
 <!-- [![bundlephobia](https://badgen.net/bundlephobia/min/chartjs-node-canvas@latest)](https://bundlephobia.com/result?p=chartjs-node-canvas) -->
 <!-- [![packagephobia install](https://badgen.net/packagephobia/install/chartjs-node-canvas@latest)](https://bundlephobia.com/result?p=chartjs-node-canvas) -->
 
@@ -45,12 +47,12 @@ Currently supports 3.x.x. You are given the ability to maintain the version your
 
 ## Features
 
-* Supports all Chart JS features and charts.
-* No heavy DOM virtualization libraries, thanks to a [pull request](https://github.com/chartjs/Chart.js/pull/5324) to chart.js allowing it to run natively on node, requiring only a Canvas API.
-* Chart JS is a peer dependency, so you can bump and manage it yourself.
-* Provides a callback with the global ChartJS variable, so you can use the [Global Configuration](https://www.chartjs.org/docs/latest/configuration/#global-configuration).
-* Uses (similar to) [fresh-require](https://www.npmjs.com/package/fresh-require) for each instance of `ChartJSNodeCanvas`, so you can mutate the ChartJS global variable separately within each instance.
-* Support for custom fonts.
+-   Supports all Chart JS features and charts.
+-   No heavy DOM virtualization libraries, thanks to a [pull request](https://github.com/chartjs/Chart.js/pull/5324) to chart.js allowing it to run natively on node, requiring only a Canvas API.
+-   Chart JS is a peer dependency, so you can bump and manage it yourself.
+-   Provides a callback with the global ChartJS variable, so you can use the [Global Configuration](https://www.chartjs.org/docs/latest/configuration/#global-configuration).
+-   Uses (similar to) [fresh-require](https://www.npmjs.com/package/fresh-require) for each instance of `ChartJSNodeCanvas`, so you can mutate the ChartJS global variable separately within each instance.
+-   Support for custom fonts.
 
 ## Limitations
 
@@ -69,15 +71,19 @@ Chart.defaults.responsive = false;
 
 For some unknown reason canvas requires use of the [sync](https://github.com/Automattic/node-canvas#canvastobuffer) API's to use SVG's or PDF's. This libraries which support these are:
 
-* [renderToBufferSync](./API.md#ChartJSNodeCanvas+renderToBufferSync) ('application/pdf' | 'image/svg+xml')
-* [renderToStream](./API.md#ChartJSNodeCanvas+renderToStream) ('application/pdf')
+-   [renderToBufferSync](./API.md#ChartJSNodeCanvas+renderToBufferSync) ('application/pdf' | 'image/svg+xml')
+-   [renderToStream](./API.md#ChartJSNodeCanvas+renderToStream) ('application/pdf')
 
 You also need to set the canvas type when you initialize the `ChartJSNodeCanvas` instance like the following:
 
 ```js
-const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
+const { ChartJSNodeCanvas } = require("chartjs-node-canvas");
 
-const chartJSNodeCanvas = new ChartJSNodeCanvas({ type: 'svg', width: 800, height: 600 }); 
+const chartJSNodeCanvas = new ChartJSNodeCanvas({
+    type: "svg",
+    width: 800,
+    height: 600,
+});
 ```
 
 ## API
@@ -112,13 +118,21 @@ Every instance of `ChartJSNodeCanvas` creates its own [canvas](https://github.co
 
 ```js
 // Re-use one service, or as many as you need for different canvas size requirements
-const smallChartJSNodeCanvas = new ChartJSNodeCanvas({ width: 400, height: 400 });
-const bigCChartJSNodeCanvas = new ChartJSNodeCanvas({ width: 2000, height: 2000 });
+const smallChartJSNodeCanvas = new ChartJSNodeCanvas({
+    width: 400,
+    height: 400,
+});
+const bigCChartJSNodeCanvas = new ChartJSNodeCanvas({
+    width: 2000,
+    height: 2000,
+});
 
 // Expose just the 'render' methods to downstream code so they don't have to worry about life-cycle management.
 exports = {
-    renderSmallChart: (configuration) => smallChartJSNodeCanvas.renderToBuffer(configuration),
-    renderBigChart: (configuration) => bigCChartJSNodeCanvas.renderToBuffer(configuration)
+    renderSmallChart: (configuration) =>
+        smallChartJSNodeCanvas.renderToBuffer(configuration),
+    renderBigChart: (configuration) =>
+        bigCChartJSNodeCanvas.renderToBuffer(configuration),
 };
 ```
 
@@ -127,14 +141,15 @@ exports = {
 Just use the ChartJS reference in the callback:
 
 ```js
-const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height, chartCallback: (ChartJS) => {
-    // New chart type example: https://www.chartjs.org/docs/latest/developers/charts.html
-    class MyType extends Chart.DatasetController {
+const chartJSNodeCanvas = new ChartJSNodeCanvas({
+    width,
+    height,
+    chartCallback: (ChartJS) => {
+        // New chart type example: https://www.chartjs.org/docs/latest/developers/charts.html
+        class MyType extends Chart.DatasetController {}
 
-    }
-
-    Chart.register(MyType);
-    }
+        Chart.register(MyType);
+    },
 });
 ```
 
@@ -143,10 +158,14 @@ const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height, chartCallback: 
 Just use the ChartJS reference in the callback:
 
 ```js
-const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height, chartCallback: (ChartJS) => {
-    // Global config example: https://www.chartjs.org/docs/latest/configuration/
-    ChartJS.defaults.elements.line.borderWidth = 2;
-} });
+const chartJSNodeCanvas = new ChartJSNodeCanvas({
+    width,
+    height,
+    chartCallback: (ChartJS) => {
+        // Global config example: https://www.chartjs.org/docs/latest/configuration/
+        ChartJS.defaults.elements.line.borderWidth = 2;
+    },
+});
 ```
 
 ### Custom Fonts
@@ -154,12 +173,18 @@ const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height, chartCallback: 
 Just use the `registerFont` method:
 
 ```js
-const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height, chartCallback: (ChartJS) => {
-    // Just example usage
-    ChartJS.global.defaultFontFamily = 'VTKS UNAMOUR';
-} });
+const chartJSNodeCanvas = new ChartJSNodeCanvas({
+    width,
+    height,
+    chartCallback: (ChartJS) => {
+        // Just example usage
+        ChartJS.global.defaultFontFamily = "VTKS UNAMOUR";
+    },
+});
 // Register before rendering any charts
-chartJSNodeCanvas.registerFont('./testData/VTKS UNAMOUR.ttf', { family: 'VTKS UNAMOUR' });
+chartJSNodeCanvas.registerFont("./testData/VTKS UNAMOUR.ttf", {
+    family: "VTKS UNAMOUR",
+});
 ```
 
 See the node-canvas [docs](https://github.com/Automattic/node-canvas#registerfont) and the chart js [docs](https://www.chartjs.org/docs/latest/general/fonts.html).
@@ -169,7 +194,11 @@ See the node-canvas [docs](https://github.com/Automattic/node-canvas#registerfon
 Due to the many issues and question this includes a [convenience plugin](./src/backgroundColourPlugin.ts) to fill the otherwise transparent background. It uses the [fillStyle](https://www.w3schools.com/tags/canvas_fillstyle.asp) canvas API;
 
 ```js
-const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height, backgroundColour: 'purple' });
+const chartJSNodeCanvas = new ChartJSNodeCanvas({
+    width,
+    height,
+    backgroundColour: "purple",
+});
 ```
 
 ### Loading plugins
@@ -183,56 +212,25 @@ The Chart.JS [plugin API](https://www.chartjs.org/docs/latest/developers/plugins
 Let `ChartJSNodeCanvas` manage the lifecycle of the plugin itself, each instance will have a separate instance of the plugin:
 
 ```js
-const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height, plugins: {
-    modern: ['chartjs-plugin-annotation']
-} });
+const chartJSNodeCanvas = new ChartJSNodeCanvas({
+    width,
+    height,
+    plugins: {
+        modern: ["chartjs-plugin-annotation"],
+    },
+});
 ```
 
 You want to share the plugin instance, this may cause unwanted issues, use at own risk:
 
 ```js
-const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height, plugins: {
-    modern: [require('chartjs-plugin-annotation')]
-} });
-```
-
-#### Older plugins
-
----
-
-1. Plugin that expects a global Chart variable.
-
-```js
-const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height, plugins: {
-    requireChartJSLegacy: ['<some plugin>']
-}});
-```
-
-2. Plugins that `require` ChartJS themselves.
-
-```js
-const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height, plugins: {
-    globalVariableLegacy: ['chartjs-plugin-crosshair']
-} });
-```
-
-3. Register plugin directly with ChartJS:
-
-```js
-const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height, plugins: {
-    requireLegacy: ['chartjs-plugin-datalabels']
-} });
-```
-
----
-
-These approaches can be combined also:
-
-```js
-const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height, plugins: {
-    modern: ['chartjs-plugin-annotation'],
-    requireLegacy: ['chartjs-plugin-datalabels']
-} });
+const chartJSNodeCanvas = new ChartJSNodeCanvas({
+    width,
+    height,
+    plugins: {
+        modern: [require("chartjs-plugin-annotation")],
+    },
+});
 ```
 
 See the [tests](src/index.e2e.spec.ts#106) for some examples.

@@ -1,27 +1,16 @@
 /// <reference types="node" />
+/// <reference types="node" />
 import { Readable } from 'stream';
 import { Chart as ChartJS, ChartConfiguration, ChartComponentLike } from 'chart.js';
-export declare type ChartJSNodeCanvasPlugins = {
+export type ChartJSNodeCanvasPlugins = {
     /**
      * Global plugins, see https://www.chartjs.org/docs/latest/developers/plugins.html.
      */
     readonly modern?: ReadonlyArray<string | ChartComponentLike>;
-    /**
-     * This will work for plugins that `require` ChartJS themselves.
-     */
-    readonly requireChartJSLegacy?: ReadonlyArray<string>;
-    /**
-     * This should work for any plugin that expects a global Chart variable.
-     */
-    readonly globalVariableLegacy?: ReadonlyArray<string>;
-    /**
-     * This will work with plugins that just return a plugin object and do no specific loading themselves.
-     */
-    readonly requireLegacy?: ReadonlyArray<string>;
 };
-export declare type ChartCallback = (chartJS: typeof ChartJS) => void | Promise<void>;
-export declare type CanvasType = 'pdf' | 'svg';
-export declare type MimeType = 'image/png' | 'image/jpeg';
+export type ChartCallback = (chartJS: typeof ChartJS) => void | Promise<void>;
+export type CanvasType = 'pdf' | 'svg';
+export type MimeType = 'image/png' | 'image/jpeg';
 export interface ChartJSNodeCanvasOptions {
     /**
      * The width of the charts to render, in pixels.
@@ -52,9 +41,6 @@ export declare class ChartJSNodeCanvas {
     private readonly _width;
     private readonly _height;
     private readonly _chartJs;
-    private readonly _createCanvas;
-    private readonly _registerFont;
-    private readonly _image;
     private readonly _type?;
     /**
      * Create a new instance of CanvasRenderService.
