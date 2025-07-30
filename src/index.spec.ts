@@ -7,7 +7,7 @@ import {
 	ChartCallback,
 	CanvasType,
 	MimeType,
-	ChartJSNodeCanvasPlugins,
+	ChartJSNodeCanvasPlugins
 } from './';
 
 const assert = new Assert();
@@ -38,7 +38,7 @@ describe(ChartJSNodeCanvas.name, () => {
 						'rgba(255, 206, 86, 0.2)',
 						'rgba(75, 192, 192, 0.2)',
 						'rgba(153, 102, 255, 0.2)',
-						'rgba(255, 159, 64, 0.2)',
+						'rgba(255, 159, 64, 0.2)'
 					],
 					borderColor: [
 						'rgba(255,99,132,1)',
@@ -46,30 +46,30 @@ describe(ChartJSNodeCanvas.name, () => {
 						'rgba(255, 206, 86, 1)',
 						'rgba(75, 192, 192, 1)',
 						'rgba(153, 102, 255, 1)',
-						'rgba(255, 159, 64, 1)',
+						'rgba(255, 159, 64, 1)'
 					],
-					borderWidth: 1,
-				},
-			],
+					borderWidth: 1
+				}
+			]
 		},
 		options: {
 			scales: {
 				yAxes: {
 					ticks: {
 						beginAtZero: true,
-						callback: (value: number) => '$' + value,
-					} as any,
-				},
-			},
+						callback: (value: number) => '$' + value
+					} as any
+				}
+			}
 		},
 		plugins: {
-			annotation: {},
-		} as any,
+			annotation: {}
+		} as any
 	};
 
 	function createSUT(
 		type?: CanvasType,
-		plugins?: ChartJSNodeCanvasPlugins,
+		plugins?: ChartJSNodeCanvasPlugins
 	): ChartJSNodeCanvas {
 		const chartCallback: ChartCallback = (ChartJS) => {
 			ChartJS.defaults.responsive = true;
@@ -80,7 +80,7 @@ describe(ChartJSNodeCanvas.name, () => {
 			height,
 			chartCallback,
 			type,
-			plugins,
+			plugins
 		});
 	}
 
@@ -97,30 +97,19 @@ describe(ChartJSNodeCanvas.name, () => {
 						const chartJSNodeCanvas = createSUT(canvasType);
 						const dataUrl = await chartJSNodeCanvas.renderToDataURL(
 							configuration,
-							mimeType,
+							mimeType
 						);
-						assert.equal(
-							dataUrl.startsWith(`data:${mimeType};base64,`),
-							true,
-						);
+						assert.equal(dataUrl.startsWith(`data:${mimeType};base64,`), true);
 					});
 
 					it('renders data url in parallel', async () => {
 						const chartJSNodeCanvas = createSUT(canvasType);
 						const promises = Array(3)
 							.fill(undefined)
-							.map(() =>
-								chartJSNodeCanvas.renderToDataURL(
-									configuration,
-									mimeType,
-								),
-							);
+							.map(() => chartJSNodeCanvas.renderToDataURL(configuration, mimeType));
 						const dataUrls = await Promise.all(promises);
 						dataUrls.forEach((dataUrl) =>
-							assert.equal(
-								dataUrl.startsWith(`data:${mimeType};base64,`),
-								true,
-							),
+							assert.equal(dataUrl.startsWith(`data:${mimeType};base64,`), true)
 						);
 					});
 				});
@@ -138,12 +127,9 @@ describe(ChartJSNodeCanvas.name, () => {
 						const chartJSNodeCanvas = createSUT(canvasType);
 						const dataUrl = chartJSNodeCanvas.renderToDataURLSync(
 							configuration,
-							mimeType,
+							mimeType
 						);
-						assert.equal(
-							dataUrl.startsWith(`data:${mimeType};base64,`),
-							true,
-						);
+						assert.equal(dataUrl.startsWith(`data:${mimeType};base64,`), true);
 					});
 
 					it('renders data url in parallel', () => {
@@ -151,16 +137,10 @@ describe(ChartJSNodeCanvas.name, () => {
 						const dataUrls = Array(3)
 							.fill(undefined)
 							.map(() =>
-								chartJSNodeCanvas.renderToDataURLSync(
-									configuration,
-									mimeType,
-								),
+								chartJSNodeCanvas.renderToDataURLSync(configuration, mimeType)
 							);
 						dataUrls.forEach((dataUrl) =>
-							assert.equal(
-								dataUrl.startsWith(`data:${mimeType};base64,`),
-								true,
-							),
+							assert.equal(dataUrl.startsWith(`data:${mimeType};base64,`), true)
 						);
 					});
 				});
@@ -178,7 +158,7 @@ describe(ChartJSNodeCanvas.name, () => {
 						const chartJSNodeCanvas = createSUT(canvasType);
 						const image = await chartJSNodeCanvas.renderToBuffer(
 							configuration,
-							mimeType,
+							mimeType
 						);
 						assert.equal(image instanceof Buffer, true);
 					});
@@ -192,14 +172,9 @@ describe(ChartJSNodeCanvas.name, () => {
 			[
 				[undefined, mimeTypes],
 				['svg', ['image/svg+xml']],
-				['pdf', ['application/pdf']],
+				['pdf', ['application/pdf']]
 			] as ReadonlyArray<
-				[
-					CanvasType,
-					ReadonlyArray<
-						MimeType | 'application/pdf' | 'image/svg+xml'
-					>,
-				]
+				[CanvasType, ReadonlyArray<MimeType | 'application/pdf' | 'image/svg+xml'>]
 			>
 		).forEach(([canvasType, extendedMimeTypes]) => {
 			describe(`given canvasType '${canvasType}'`, () => {
@@ -209,7 +184,7 @@ describe(ChartJSNodeCanvas.name, () => {
 							const chartJSNodeCanvas = createSUT(canvasType);
 							const image = chartJSNodeCanvas.renderToBufferSync(
 								configuration,
-								mimeType,
+								mimeType
 							);
 							assert.equal(image instanceof Buffer, true);
 						});
@@ -223,12 +198,9 @@ describe(ChartJSNodeCanvas.name, () => {
 		(
 			[
 				[undefined, mimeTypes],
-				['pdf', ['application/pdf']],
+				['pdf', ['application/pdf']]
 			] as ReadonlyArray<
-				[
-					CanvasType | undefined,
-					ReadonlyArray<MimeType | 'application/pdf'>,
-				]
+				[CanvasType | undefined, ReadonlyArray<MimeType | 'application/pdf'>]
 			>
 		).forEach(([canvasType, extendedMimeTypes]) => {
 			describe(`given canvasType '${canvasType}'`, () => {
@@ -238,24 +210,18 @@ describe(ChartJSNodeCanvas.name, () => {
 							const chartJSNodeCanvas = createSUT(canvasType);
 							const stream = chartJSNodeCanvas.renderToStream(
 								configuration,
-								mimeType,
+								mimeType
 							);
 							const data: Array<Buffer> = [];
 							stream.on('data', (chunk: Buffer) => {
 								data.push(chunk);
 							});
 							stream.on('end', () => {
-								assert.equal(
-									Buffer.concat(data).length > 0,
-									true,
-								);
+								assert.equal(Buffer.concat(data).length > 0, true);
 								done();
 							});
 							stream.on('finish', () => {
-								assert.equal(
-									Buffer.concat(data).length > 0,
-									true,
-								);
+								assert.equal(Buffer.concat(data).length > 0, true);
 								done();
 							});
 							stream.on('error', (error) => {

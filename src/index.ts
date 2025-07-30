@@ -1,15 +1,12 @@
 import { Readable } from 'stream';
-import {
-	Chart as ChartJS,
-	ChartConfiguration,
-	ChartComponentLike,
-} from 'chart.js';
+import { Chart as ChartJS, ChartConfiguration, ChartComponentLike } from 'chart.js';
 import { createCanvas, registerFont, Image } from 'canvas';
 import { BackgroundColourPlugin } from './backgroundColourPlugin';
 
 export type ChartJSNodeCanvasPlugins = {
 	/**
-	 * Global plugins, see https://www.chartjs.org/docs/latest/developers/plugins.html.
+	 * Global plugins,
+	 * see https://www.chartjs.org/docs/latest/developers/plugins.html.
 	 */
 	readonly modern?: ReadonlyArray<string | ChartComponentLike>;
 };
@@ -22,7 +19,7 @@ type Canvas = HTMLCanvasElement & {
 	toBuffer(
 		callback: (err: Error | null, result: Buffer) => void,
 		mimeType?: string,
-		config?: any,
+		config?: any
 	): void;
 	toBuffer(mimeType?: string, config?: any): Buffer;
 	createPNGStream(config?: any): Readable;
@@ -40,11 +37,14 @@ export interface ChartJSNodeCanvasOptions {
 	 */
 	readonly height: number;
 	/**
-	 * Optional callback which is called once with a new ChartJS global reference as the only parameter.
+	 * Optional callback which is called once with a new ChartJS
+	 * global reference as the only parameter.
 	 */
 	readonly chartCallback?: ChartCallback;
 	/**
-	 * Optional canvas type ('PDF' or 'SVG'), see the [canvas pdf doc](https://github.com/Automattic/node-canvas#pdf-output-support).
+	 * Optional canvas type ('PDF' or 'SVG'),
+	 * see the [canvas pdf doc
+	 * ](https://github.com/Automattic/node-canvas#pdf-output-support).
 	 */
 	readonly type?: CanvasType;
 	/**
@@ -53,7 +53,10 @@ export interface ChartJSNodeCanvasOptions {
 	readonly plugins?: ChartJSNodeCanvasPlugins;
 
 	/**
-	 * Optional background color for the chart, otherwise it will be transparent. Note, this will apply to all charts. See the [fillStyle](https://www.w3schools.com/tags/canvas_fillstyle.asp) canvas API used for possible values.
+	 * Optional background color for the chart, otherwise it will be transparent.
+	 * Note, this will apply to all charts.
+	 * See the [fillStyle](https://www.w3schools.com/tags/canvas_fillstyle.asp)
+	 * canvas API used for possible values.
 	 */
 	readonly backgroundColour?: string;
 }
@@ -95,7 +98,7 @@ export class ChartJSNodeCanvas {
 	 */
 	public renderToDataURL(
 		configuration: ChartConfiguration,
-		mimeType: MimeType = 'image/png',
+		mimeType: MimeType = 'image/png'
 	): Promise<string> {
 		const chart = this.renderChart(configuration);
 		return new Promise<string>((resolve, reject) => {
@@ -122,7 +125,7 @@ export class ChartJSNodeCanvas {
 	 */
 	public renderToDataURLSync(
 		configuration: ChartConfiguration,
-		mimeType: MimeType = 'image/png',
+		mimeType: MimeType = 'image/png'
 	): string {
 		const chart = this.renderChart(configuration);
 		if (!chart.canvas) {
@@ -139,11 +142,15 @@ export class ChartJSNodeCanvas {
 	 * @see https://github.com/Automattic/node-canvas#canvastobuffer
 	 *
 	 * @param configuration The Chart JS configuration for the chart to render.
-	 * @param mimeType A string indicating the image format. Valid options are `image/png`, `image/jpeg` (if node-canvas was built with JPEG support) or `raw` (unencoded ARGB32 data in native-endian byte order, top-to-bottom). Defaults to `image/png` for image canvases, or the corresponding type for PDF or SVG canvas.
+	 * @param mimeType A string indicating the image format.
+	 * 			Valid options are `image/png`, `image/jpeg` (if node-canvas was
+	 * 			built with JPEG support) or `raw` (unencoded ARGB32 data in
+	 * 			native-endian byte order, top-to-bottom). Defaults to `image/png`
+	 * 		  for image canvases, or the corresponding type for PDF or SVG canvas.
 	 */
 	public renderToBuffer(
 		configuration: ChartConfiguration,
-		mimeType: MimeType = 'image/png',
+		mimeType: MimeType = 'image/png'
 	): Promise<Buffer> {
 		const chart = this.renderChart(configuration);
 		return new Promise<Buffer>((resolve, reject) => {
@@ -166,11 +173,17 @@ export class ChartJSNodeCanvas {
 	 * @see https://github.com/Automattic/node-canvas#canvastobuffer
 	 *
 	 * @param configuration The Chart JS configuration for the chart to render.
-	 * @param mimeType A string indicating the image format. Valid options are `image/png`, `image/jpeg` (if node-canvas was built with JPEG support), `raw` (unencoded ARGB32 data in native-endian byte order, top-to-bottom), `application/pdf` (for PDF canvases) and image/svg+xml (for SVG canvases). Defaults to `image/png` for image canvases, or the corresponding type for PDF or SVG canvas.
+	 * @param mimeType A string indicating the image format.
+	 * 		Valid options are `image/png`, `image/jpeg` (if node-canvas
+	 * 		was built with JPEG support), `raw` (unencoded ARGB32 data in
+	 * 		native-endian byte order, top-to-bottom), `application/pdf`
+	 * 		(for PDF canvases) and image/svg+xml (for SVG canvases).
+	 * Defaults to `image/png` for image canvases,
+	 * or the corresponding type for PDF or SVG canvas.
 	 */
 	public renderToBufferSync(
 		configuration: ChartConfiguration,
-		mimeType: MimeType | 'application/pdf' | 'image/svg+xml' = 'image/png',
+		mimeType: MimeType | 'application/pdf' | 'image/svg+xml' = 'image/png'
 	): Buffer {
 		const chart = this.renderChart(configuration);
 		if (!chart.canvas) {
@@ -187,11 +200,15 @@ export class ChartJSNodeCanvas {
 	 * @see https://github.com/Automattic/node-canvas#canvascreatepngstream
 	 *
 	 * @param configuration The Chart JS configuration for the chart to render.
-	 * @param mimeType A string indicating the image format. Valid options are `image/png`, `image/jpeg` (if node-canvas was built with JPEG support), `application/pdf` (for PDF canvases) and image/svg+xml (for SVG canvases). Defaults to `image/png` for image canvases, or the corresponding type for PDF or SVG canvas.
+	 * @param mimeType A string indicating the image format.
+	 * 		Valid options are `image/png`, `image/jpeg` (if node-canvas was
+	 * 		built with JPEG support), `application/pdf` (for PDF canvases)
+	 * 		and image/svg+xml (for SVG canvases). Defaults to `image/png`
+	 * 		for image canvases, or the corresponding type for PDF or SVG canvas.
 	 */
 	public renderToStream(
 		configuration: ChartConfiguration,
-		mimeType: MimeType | 'application/pdf' = 'image/png',
+		mimeType: MimeType | 'application/pdf' = 'image/png'
 	): Readable {
 		const chart = this.renderChart(configuration);
 		if (!chart.canvas) {
@@ -212,7 +229,9 @@ export class ChartJSNodeCanvas {
 	}
 
 	/**
-	 * Use to register the font with Canvas to use a font file that is not installed as a system font, this must be done before the Canvas is created.
+	 * Use to register the font with Canvas to use a font file that is not
+	 * installed as a system font, this must be done before the Canvas is
+	 * created.
 	 *
 	 * @param path The path to the font file.
 	 * @param options The font options.
@@ -225,7 +244,7 @@ export class ChartJSNodeCanvas {
 			readonly family: string;
 			readonly weight?: string;
 			readonly style?: string;
-		},
+		}
 	): void {
 		registerFont(path, options);
 	}
@@ -234,9 +253,7 @@ export class ChartJSNodeCanvas {
 		if (options.plugins?.modern) {
 			for (const plugin of options.plugins.modern) {
 				if (typeof plugin === 'string') {
-					console.error(
-						`Plugin needs to be loaded, but got a string: ${plugin}`,
-					);
+					console.error(`Plugin needs to be loaded, but got a string: ${plugin}`);
 				} else {
 					ChartJS.register(plugin);
 				}
@@ -252,8 +269,8 @@ export class ChartJSNodeCanvas {
 				new BackgroundColourPlugin(
 					options.width,
 					options.height,
-					options.backgroundColour,
-				),
+					options.backgroundColour
+				)
 			);
 		}
 

@@ -6,7 +6,8 @@ import { Readable } from 'stream';
 import { describe, it } from 'mocha';
 import { Stream } from 'stream';
 import { ChartConfiguration } from 'chart.js';
-import resemble /*, { ResembleSingleCallbackComparisonOptions, ResembleSingleCallbackComparisonResult }*/ from 'resemblejs';
+import resemble from 'resemblejs'; /*, { ResembleSingleCallbackComparisonOptions,
+	 ResembleSingleCallbackComparisonResult }*/
 
 import { ChartJSNodeCanvas, ChartCallback } from './';
 
@@ -18,7 +19,7 @@ describe(ChartJSNodeCanvas.name, () => {
 		green: 'rgb(75, 192, 192)',
 		blue: 'rgb(54, 162, 235)',
 		purple: 'rgb(153, 102, 255)',
-		grey: 'rgb(201, 203, 207)',
+		grey: 'rgb(201, 203, 207)'
 	};
 	const width = 400;
 	const height = 400;
@@ -36,7 +37,7 @@ describe(ChartJSNodeCanvas.name, () => {
 						'rgba(255, 206, 86, 0.2)',
 						'rgba(75, 192, 192, 0.2)',
 						'rgba(153, 102, 255, 0.2)',
-						'rgba(255, 159, 64, 0.2)',
+						'rgba(255, 159, 64, 0.2)'
 					],
 					borderColor: [
 						'rgba(255,99,132,1)',
@@ -44,26 +45,25 @@ describe(ChartJSNodeCanvas.name, () => {
 						'rgba(255, 206, 86, 1)',
 						'rgba(75, 192, 192, 1)',
 						'rgba(153, 102, 255, 1)',
-						'rgba(255, 159, 64, 1)',
+						'rgba(255, 159, 64, 1)'
 					],
-					borderWidth: 1,
-				},
-			],
+					borderWidth: 1
+				}
+			]
 		},
 		options: {
 			scales: {
 				yAxes: {
 					beginAtZero: true,
 					ticks: {
-						callback: (tickValue, _index, _ticks) =>
-							'$' + tickValue,
-					},
-				},
+						callback: (tickValue, _index, _ticks) => '$' + tickValue
+					}
+				}
 			},
 			plugins: {
-				annotation: {},
-			} as any,
-		},
+				annotation: {}
+			} as any
+		}
 	};
 	const chartCallback: ChartCallback = (ChartJS) => {
 		ChartJS.defaults.responsive = true;
@@ -75,7 +75,7 @@ describe(ChartJSNodeCanvas.name, () => {
 			width,
 			height,
 			chartCallback,
-			backgroundColour: 'white',
+			backgroundColour: 'white'
 		});
 		const actual = await chartJSNodeCanvas.renderToBuffer(configuration);
 		await assertImage(actual, 'render-to-buffer');
@@ -86,7 +86,7 @@ describe(ChartJSNodeCanvas.name, () => {
 			width,
 			height,
 			chartCallback,
-			backgroundColour: 'white',
+			backgroundColour: 'white'
 		});
 		const actual = await chartJSNodeCanvas.renderToDataURL(configuration);
 		const extension = '.txt';
@@ -96,7 +96,7 @@ describe(ChartJSNodeCanvas.name, () => {
 			process.cwd(),
 			'testData',
 			platform(),
-			fileName + extension,
+			fileName + extension
 		);
 
 		// HACK: for some reason, this ends up with win32 as the platform
@@ -105,41 +105,46 @@ describe(ChartJSNodeCanvas.name, () => {
 				process.cwd(),
 				'testData',
 				'win32',
-				fileName + extension,
+				fileName + extension
 			);
 		}
 
 		const expected = await fs.readFile(expectedDataPath, 'utf8');
 		// const result = actual === expected;
 		const compareData = await compareImages(actual, expected, {
-			output: { useCrossOrigin: false },
+			output: { useCrossOrigin: false }
 		});
 		const misMatchPercentage = Number(compareData.misMatchPercentage);
 		const result = misMatchPercentage > 0;
 		if (result) {
 			const actualDataPath = expectedDataPath.replace(
 				fileNameWithExtension,
-				fileName + '-actual' + extension,
+				fileName + '-actual' + extension
 			);
 			await fs.writeFile(actualDataPath, actual);
-			const compare = `<div>Actual:</div>${EOL}<img src="${actual}">${EOL}<div>Expected:</div><img src="${expected}">`;
+			const compare =
+				`<div>Actual:</div>${EOL}` +
+				`<img src="${actual}">${EOL}` +
+				`<div>Expected:</div><img src="${expected}">`;
 			const compareDataPath = expectedDataPath.replace(
 				fileNameWithExtension,
-				fileName + '-compare.html',
+				fileName + '-compare.html'
 			);
 			await fs.writeFile(compareDataPath, compare);
 			const diffPng = compareData.getBuffer();
 			await writeDiff(
 				expectedDataPath.replace(
 					fileNameWithExtension,
-					fileName + '-diff' + extension,
+					fileName + '-diff' + extension
 				),
-				diffPng,
+				diffPng
 			);
 			throw new AssertionError({
-				message: `Expected data urls to match, mismatch was ${misMatchPercentage}%${EOL}See '${compareDataPath}'`,
+				message:
+					`Expected data URLs to match, ` +
+					`mismatch was ${misMatchPercentage}%${EOL}See '${compareDataPath}'`,
 				actual: actualDataPath,
-				expected: expectedDataPath,
+				expected: expectedDataPath
 			});
 		}
 	});
@@ -149,7 +154,7 @@ describe(ChartJSNodeCanvas.name, () => {
 			width,
 			height,
 			chartCallback,
-			backgroundColour: 'white',
+			backgroundColour: 'white'
 		});
 		const stream = chartJSNodeCanvas.renderToStream(configuration);
 		const actual = await streamToBuffer(stream);
@@ -162,21 +167,13 @@ describe(ChartJSNodeCanvas.name, () => {
 			height,
 			backgroundColour: 'white',
 			plugins: {
-				modern: ['chartjs-plugin-annotation'],
-			},
+				modern: ['chartjs-plugin-annotation']
+			}
 		});
 		const actual = await chartJSNodeCanvas.renderToBuffer({
 			type: 'bar',
 			data: {
-				labels: [
-					'January',
-					'February',
-					'March',
-					'April',
-					'May',
-					'June',
-					'July',
-				],
+				labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
 				datasets: [
 					{
 						type: 'line',
@@ -184,7 +181,7 @@ describe(ChartJSNodeCanvas.name, () => {
 						borderColor: chartColors.blue,
 						borderWidth: 2,
 						fill: false,
-						data: [-39, 44, -22, -45, -27, 12, 18],
+						data: [-39, 44, -22, -45, -27, 12, 18]
 					},
 					{
 						type: 'bar',
@@ -192,15 +189,15 @@ describe(ChartJSNodeCanvas.name, () => {
 						backgroundColor: chartColors.red,
 						data: [-18, -43, 36, -37, 1, -1, 26],
 						borderColor: 'white',
-						borderWidth: 2,
+						borderWidth: 2
 					},
 					{
 						type: 'bar',
 						label: 'Dataset 3',
 						backgroundColor: chartColors.green,
-						data: [-7, 21, 1, 7, 34, -29, -36],
-					},
-				],
+						data: [-7, 21, 1, 7, 34, -29, -36]
+					}
+				]
 			},
 			options: {
 				responsive: true,
@@ -219,8 +216,8 @@ describe(ChartJSNodeCanvas.name, () => {
 								label: {
 									backgroundColor: 'red',
 									content: 'Test Label',
-									enabled: true,
-								},
+									enabled: true
+								}
 							},
 							{
 								drawTime: 'beforeDatasetsDraw',
@@ -233,12 +230,12 @@ describe(ChartJSNodeCanvas.name, () => {
 								yMax: 40,
 								backgroundColor: 'rgba(101, 33, 171, 0.5)',
 								borderColor: 'rgb(101, 33, 171)',
-								borderWidth: 1,
-							},
-						],
-					},
-				} as any,
-			},
+								borderWidth: 1
+							}
+						]
+					}
+				} as any
+			}
 		});
 		await assertImage(actual, 'chartjs-plugin-annotation');
 	});
@@ -250,10 +247,10 @@ describe(ChartJSNodeCanvas.name, () => {
 			backgroundColour: 'white',
 			chartCallback: (ChartJS) => {
 				ChartJS.defaults.font.family = 'VTKS UNAMOUR';
-			},
+			}
 		});
 		chartJSNodeCanvas.registerFont('./testData/VTKS UNAMOUR.ttf', {
-			family: 'VTKS UNAMOUR',
+			family: 'VTKS UNAMOUR'
 		});
 		const actual = await chartJSNodeCanvas.renderToBuffer({
 			type: 'bar',
@@ -269,7 +266,7 @@ describe(ChartJSNodeCanvas.name, () => {
 							'rgba(255, 206, 86, 0.2)',
 							'rgba(75, 192, 192, 0.2)',
 							'rgba(153, 102, 255, 0.2)',
-							'rgba(255, 159, 64, 0.2)',
+							'rgba(255, 159, 64, 0.2)'
 						],
 						borderColor: [
 							'rgba(255,99,132,1)',
@@ -277,25 +274,25 @@ describe(ChartJSNodeCanvas.name, () => {
 							'rgba(255, 206, 86, 1)',
 							'rgba(75, 192, 192, 1)',
 							'rgba(153, 102, 255, 1)',
-							'rgba(255, 159, 64, 1)',
+							'rgba(255, 159, 64, 1)'
 						],
-						borderWidth: 1,
-					},
-				],
+						borderWidth: 1
+					}
+				]
 			},
 			options: {
 				scales: {
 					yAxes: {
 						ticks: {
 							beginAtZero: true,
-							callback: (value: number) => '$' + value,
-						} as any,
-					},
-				},
+							callback: (value: number) => '$' + value
+						} as any
+					}
+				}
 			},
 			plugins: {
-				annotation: {},
-			} as any,
+				annotation: {}
+			} as any
 		});
 		await assertImage(actual, 'font');
 	});
@@ -304,7 +301,7 @@ describe(ChartJSNodeCanvas.name, () => {
 		const chartJSNodeCanvas = new ChartJSNodeCanvas({
 			width,
 			height,
-			chartCallback,
+			chartCallback
 		});
 		const actual = await chartJSNodeCanvas.renderToBuffer(configuration);
 		await assertImage(actual, 'no-background-color');
@@ -314,11 +311,12 @@ describe(ChartJSNodeCanvas.name, () => {
 
 	/*
 	it('does not leak with new instance', async () => {
-
-		const diffs = await Promise.all([...Array(4).keys()].map((iteration) => {
+		const diffs = await
+					Promise.all([...Array(4).keys()].map((iteration) => {
 			const heapDiff = new memwatch.HeapDiff();
 			console.log('generated heap for iteration ' + (iteration + 1));
-			const ChartJSNodeCanvas = new ChartJSNodeCanvas(width, height, chartCallback);
+			const ChartJSNodeCanvas = new ChartJSNodeCanvas(
+				width, height, chartCallback);
 			return ChartJSNodeCanvas.renderToBuffer(configuration, 'image/png')
 				.then(() => {
 					const diff = heapDiff.end();
@@ -333,8 +331,10 @@ describe(ChartJSNodeCanvas.name, () => {
 
 	it('does not leak with same instance', async () => {
 
-		const ChartJSNodeCanvas = new ChartJSNodeCanvas(width, height, chartCallback);
-		const diffs = await Promise.all([...Array(4).keys()].map((iteration) => {
+		const ChartJSNodeCanvas = new ChartJSNodeCanvas(
+			width, height, chartCallback);
+		const diffs = await
+				Promise.all([...Array(4).keys()].map((iteration) => {
 			const heapDiff = new memwatch.HeapDiff();
 			console.log('generated heap for iteration ' + (iteration + 1));
 			return ChartJSNodeCanvas.renderToBuffer(configuration, 'image/png')
@@ -366,22 +366,19 @@ describe(ChartJSNodeCanvas.name, () => {
 	}
 	*/
 
-	async function assertImage(
-		actual: Buffer,
-		fileName: string,
-	): Promise<void> {
+	async function assertImage(actual: Buffer, fileName: string): Promise<void> {
 		const extension = '.png';
 		const fileNameWithExtension = fileName + extension;
 		const testDataPath = join(
 			process.cwd(),
 			'testData',
 			platform(),
-			fileNameWithExtension,
+			fileNameWithExtension
 		);
 		const exists = await pathExists(testDataPath);
 		if (!exists) {
 			console.error(
-				`Warning: expected image path does not exist!, creating '${testDataPath}'`,
+				`Warning: expected image path does not exist!, creating '${testDataPath}'`
 			);
 			await fs.writeFile(testDataPath, actual, 'base64');
 			return;
@@ -405,49 +402,47 @@ describe(ChartJSNodeCanvas.name, () => {
 			await fs.writeFile(
 				testDataPath.replace(
 					fileNameWithExtension,
-					fileName + '-actual' + extension,
+					fileName + '-actual' + extension
 				),
-				actual,
+				actual
 			);
 			const diffPng = compareData.getBuffer();
 			await writeDiff(
-				testDataPath.replace(
-					fileNameWithExtension,
-					fileName + '-diff' + extension,
-				),
-				diffPng,
+				testDataPath.replace(fileNameWithExtension, fileName + '-diff' + extension),
+				diffPng
 			);
 			throw new AssertionError({
-				message: `Expected image to match '${testDataPath}', mismatch was ${misMatchPercentage}%'`,
+				message:
+					`Expected image to match '${testDataPath}',` +
+					` mismatch was ${misMatchPercentage}%'`,
 				// actual: JSON.stringify(actual),
 				// expected: JSON.stringify(expected),
 				operator: 'to equal',
-				stackStartFn: assertImage,
+				stackStartFn: assertImage
 			});
 		}
 	}
 
 	// resemblejs/compareImages
-	//function compareImages(image1: string | Buffer, image2: string | Buffer, options?: ResembleSingleCallbackComparisonOptions): Promise<ResembleSingleCallbackComparisonResult> {
+	//function compareImages(
+	//image1: string | Buffer,
+	//image2: string | Buffer,
+	//options?: ResembleSingleCallbackComparisonOptions
+	//): Promise<ResembleSingleCallbackComparisonResult> {
 	function compareImages(
 		image1: string | Buffer,
 		image2: string | Buffer,
-		options?: any,
+		options?: any
 	): Promise<any> {
 		return new Promise((resolve, reject) => {
 			//resemble.compare(image1, image2, options || {}, (err, data) => {
-			resemble.compare(
-				image1,
-				image2,
-				options || {},
-				(err: any, data: any) => {
-					if (err) {
-						reject(err);
-					} else {
-						resolve(data);
-					}
-				},
-			);
+			resemble.compare(image1, image2, options || {}, (err: any, data: any) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(data);
+				}
+			});
 		});
 	}
 
