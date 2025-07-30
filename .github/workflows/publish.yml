@@ -1,0 +1,36 @@
+name: Publish to NodeJS
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/master'
+    # SM: I just copied this over, so, the publish job would still need
+    #     the build to happen before it.
+    # TODO: figure out how to have this dependency work across files
+    # needs: build-and-test
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        node-version: ["16.x"]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: NPM install
+        run: npm ci
+      - name: Build
+        run: npm run-script build
+      - name: Check Size
+        run: npm run-script package-size
+      - name: Publish
+        shell: bash
+        run: ./scripts/publish.sh
+        env:
+          CI: true
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
