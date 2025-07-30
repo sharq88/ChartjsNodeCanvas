@@ -36,7 +36,7 @@
   "readme": "README.md",
   "license": "MIT",
   "engines": {
-    "node": ">=21.0.0"
+    "node": ">=20.0.0"
   },
   "dependencies": {
     "canvas": "^2.11.2",
