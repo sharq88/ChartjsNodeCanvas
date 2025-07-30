@@ -1,5 +1,6 @@
 import { Readable } from 'stream';
-import { Chart as ChartJS, ChartConfiguration, ChartComponentLike } from 'chart.js';
+import { Chart as ChartJS } from 'chart.js/auto';
+import { ChartConfiguration, ChartComponentLike } from 'chart.js';
 import { createCanvas, registerFont, Image } from 'canvas';
 import { BackgroundColourPlugin } from './backgroundColourPlugin';
 

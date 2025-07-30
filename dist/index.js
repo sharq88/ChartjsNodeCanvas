@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChartJSNodeCanvas = void 0;
-const chart_js_1 = require("chart.js");
+const auto_1 = require("chart.js/auto");
 const canvas_1 = require("canvas");
 const backgroundColourPlugin_1 = require("./backgroundColourPlugin");
 class ChartJSNodeCanvas {
@@ -70,7 +70,11 @@ class ChartJSNodeCanvas {
      * @see https://github.com/Automattic/node-canvas#canvastobuffer
      *
      * @param configuration The Chart JS configuration for the chart to render.
-     * @param mimeType A string indicating the image format. Valid options are `image/png`, `image/jpeg` (if node-canvas was built with JPEG support) or `raw` (unencoded ARGB32 data in native-endian byte order, top-to-bottom). Defaults to `image/png` for image canvases, or the corresponding type for PDF or SVG canvas.
+     * @param mimeType A string indicating the image format.
+     * 			Valid options are `image/png`, `image/jpeg` (if node-canvas was
+     * 			built with JPEG support) or `raw` (unencoded ARGB32 data in
+     * 			native-endian byte order, top-to-bottom). Defaults to `image/png`
+     * 		  for image canvases, or the corresponding type for PDF or SVG canvas.
      */
     renderToBuffer(configuration, mimeType = 'image/png') {
         const chart = this.renderChart(configuration);
@@ -93,7 +97,13 @@ class ChartJSNodeCanvas {
      * @see https://github.com/Automattic/node-canvas#canvastobuffer
      *
      * @param configuration The Chart JS configuration for the chart to render.
-     * @param mimeType A string indicating the image format. Valid options are `image/png`, `image/jpeg` (if node-canvas was built with JPEG support), `raw` (unencoded ARGB32 data in native-endian byte order, top-to-bottom), `application/pdf` (for PDF canvases) and image/svg+xml (for SVG canvases). Defaults to `image/png` for image canvases, or the corresponding type for PDF or SVG canvas.
+     * @param mimeType A string indicating the image format.
+     * 		Valid options are `image/png`, `image/jpeg` (if node-canvas
+     * 		was built with JPEG support), `raw` (unencoded ARGB32 data in
+     * 		native-endian byte order, top-to-bottom), `application/pdf`
+     * 		(for PDF canvases) and image/svg+xml (for SVG canvases).
+     * Defaults to `image/png` for image canvases,
+     * or the corresponding type for PDF or SVG canvas.
      */
     renderToBufferSync(configuration, mimeType = 'image/png') {
         const chart = this.renderChart(configuration);
@@ -110,7 +120,11 @@ class ChartJSNodeCanvas {
      * @see https://github.com/Automattic/node-canvas#canvascreatepngstream
      *
      * @param configuration The Chart JS configuration for the chart to render.
-     * @param mimeType A string indicating the image format. Valid options are `image/png`, `image/jpeg` (if node-canvas was built with JPEG support), `application/pdf` (for PDF canvases) and image/svg+xml (for SVG canvases). Defaults to `image/png` for image canvases, or the corresponding type for PDF or SVG canvas.
+     * @param mimeType A string indicating the image format.
+     * 		Valid options are `image/png`, `image/jpeg` (if node-canvas was
+     * 		built with JPEG support), `application/pdf` (for PDF canvases)
+     * 		and image/svg+xml (for SVG canvases). Defaults to `image/png`
+     * 		for image canvases, or the corresponding type for PDF or SVG canvas.
      */
     renderToStream(configuration, mimeType = 'image/png') {
         const chart = this.renderChart(configuration);
@@ -131,7 +145,9 @@ class ChartJSNodeCanvas {
         }
     }
     /**
-     * Use to register the font with Canvas to use a font file that is not installed as a system font, this must be done before the Canvas is created.
+     * Use to register the font with Canvas to use a font file that is not
+     * installed as a system font, this must be done before the Canvas is
+     * created.
      *
      * @param path The path to the font file.
      * @param options The font options.
@@ -149,18 +165,18 @@ class ChartJSNodeCanvas {
                     console.error(`Plugin needs to be loaded, but got a string: ${plugin}`);
                 }
                 else {
-                    chart_js_1.Chart.register(plugin);
+                    auto_1.Chart.register(plugin);
                 }
             }
         }
         if (options.chartCallback) {
-            options.chartCallback(chart_js_1.Chart);
+            options.chartCallback(auto_1.Chart);
         }
         if (options.backgroundColour) {
-            chart_js_1.Chart.register(new backgroundColourPlugin_1.BackgroundColourPlugin(options.width, options.height, options.backgroundColour));
+            auto_1.Chart.register(new backgroundColourPlugin_1.BackgroundColourPlugin(options.width, options.height, options.backgroundColour));
         }
         delete require.cache[require.resolve('chart.js')];
-        return chart_js_1.Chart;
+        return auto_1.Chart;
     }
     renderChart(configuration) {
         const canvas = (0, canvas_1.createCanvas)(this._width, this._height, this._type);
